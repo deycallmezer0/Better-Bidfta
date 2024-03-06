@@ -4,7 +4,7 @@
     <title>Items</title>
     <style>
         .item-image {
-            height: 50px;  /*Or the height that fits within your row*/
+            height: 8rem;  /*Or the height that fits within your row*/
             width: auto;
             max-width: 100%;
         }
@@ -29,10 +29,9 @@
         <td>{{ item[3] }}</td>
         <td>{{ item[4] }}</td>
         <td>{{ item[5] }}</td>
+        <td>{{ item[6] }}</td>
         <td>
-            {% for pic_url in item[6] %}
-            <img class="item-image" src="{{ pic_url }}" alt="Picture">
-            {% endfor %}
+           <img class="item-image" src="{{ item[7][0] if item[7] else '' }}" alt="Picture">
         </td>
     </tr>
     {% endfor %}

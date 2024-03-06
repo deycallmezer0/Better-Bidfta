@@ -57,7 +57,7 @@ def hello_world():
                                         'condition': condition_key, 'msrp': msrp_key, 'brand': brand_key,
                                         'next_bid': next_bid, 'time_remaining': time_remaining,
                                         'bids_count': bids_count, 'pictures': pictures}
-                all_items_time_remaining.append((item_url, title, time_remaining, current_bid_key, next_bid, bids_count, pictures))
+                all_items_time_remaining.append((item_url, title, time_remaining, current_bid_key, next_bid, bids_count,condition_key,pictures))
 
         final_items[auction_number] = active_items
 
