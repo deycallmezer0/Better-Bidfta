@@ -25,6 +25,9 @@ def hello_world():
     all_items_time_remaining = []
 
     for auction in auctions:
+        auction_location_class="flex items-center mb-1"
+        auction_location = auction.find('div', class_=auction_location_class)
+        auction_location = auction_location.text
         auction_link = auction.find('a', href=True)
         auction_url = auction_link['href']
         auction_number = re.findall(r'\d+', auction_url)
@@ -57,7 +60,7 @@ def hello_world():
                                         'condition': condition_key, 'msrp': msrp_key, 'brand': brand_key,
                                         'next_bid': next_bid, 'time_remaining': time_remaining,
                                         'bids_count': bids_count, 'pictures': pictures}
-                all_items_time_remaining.append((item_url, title, time_remaining, current_bid_key, next_bid, bids_count,condition_key,pictures))
+                all_items_time_remaining.append((item_url,auction_location, title, time_remaining, current_bid_key, next_bid, bids_count,condition_key,pictures))
 
         final_items[auction_number] = active_items
 

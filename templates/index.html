@@ -14,11 +14,13 @@
 <table>
     <tr>
         <th>URL</th>
+        <th>Location</th>
         <th>Title</th>
         <th>Time Remaining</th>
         <th>Current Bid</th>
         <th>Next Bid</th>
         <th>Bids Count</th>
+        <th>Condition</th>
         <th>Pictures</th>
     </tr>
     {% for item in items %}
@@ -30,8 +32,9 @@
         <td>{{ item[4] }}</td>
         <td>{{ item[5] }}</td>
         <td>{{ item[6] }}</td>
+        <td>{{ item[7] }}</td>
         <td>
-           <img class="item-image" src="{{ item[7][0] if item[7] else '' }}" alt="Picture">
+           <img class="item-image" src="{{ item[8][0] if item[8] else '' }}" alt="Picture">
         </td>
     </tr>
     {% endfor %}
