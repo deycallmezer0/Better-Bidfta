@@ -9,9 +9,8 @@ app = Flask(__name__)
 app.debug = True
 @app.route('/')
 @app.route('/home')
-def hello_world():
-    url_template = f"https://www.bidfta.com/auction-detail/auction_num/1"
-    item_template = f"https://www.bidfta.com/action_num/item-detail/item_id"
+def run():
+
 
     def get_html(url):
         response = requests.get(url)

@@ -1,0 +1,6 @@
+
+        .item-image {
+            height: 8rem;  /*Or the height that fits within your row*/
+            width: auto;
+            max-width: 100%;
+        }
