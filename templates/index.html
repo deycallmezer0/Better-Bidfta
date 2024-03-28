@@ -1,12 +1,9 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-
-    <title>Items</title>
-<link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet" type="text/css">
-</head>
 <body>
+<p>Displaying items {{ 50*(page_number-1) + 1 }} - {{ 50*page_number }}</p>
+<form action="/search" method="get">
+    <input type="text" name="zipCode">
+    <button type="submit">Submit</button>
+</form>
 <table>
     <tr>
         <th>URL</th>
@@ -17,9 +14,8 @@
         <th>Next Bid</th>
         <th>Bids Count</th>
         <th>Condition</th>
-        <th>Pictures</th>
     </tr>
-    {% for item in items %}
+    {% for item in current_page %}
     <tr>
         <td><a href="{{ item[0] }}">{{ item[0] }}</a></td>
         <td>{{ item[1] }}</td>
@@ -29,11 +25,15 @@
         <td>{{ item[5] }}</td>
         <td>{{ item[6] }}</td>
         <td>{{ item[7] }}</td>
-        <td>
-           <img class="item-image" src="{{ item[8][0] if item[8] else '' }}" alt="Picture">
-        </td>
     </tr>
     {% endfor %}
 </table>
+<footer>
+  <p>Total pages: {{ total_pages }}</p>
+</footer>
+<div class="pagination">
+  {% for page_num in range(1, total_pages+1) %}
+    <a href="{{ url_for('load_home', page_number=page_num) }}">{{ page_num }}</a>
+  {% endfor %}
+</div>
 </body>
-</html>
