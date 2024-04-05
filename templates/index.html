@@ -1,39 +1,62 @@
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
+</head>
+
 <body>
-<p>Displaying items {{ 50*(page_number-1) + 1 }} - {{ 50*page_number }}</p>
-<form action="/search" method="get">
-    <input type="text" name="zipCode">
-    <button type="submit">Submit</button>
-</form>
-<table>
-    <tr>
-        <th>URL</th>
-        <th>Location</th>
-        <th>Title</th>
-        <th>Time Remaining</th>
-        <th>Current Bid</th>
-        <th>Next Bid</th>
-        <th>Bids Count</th>
-        <th>Condition</th>
-    </tr>
-    {% for item in current_page %}
-    <tr>
-        <td><a href="{{ item[0] }}">{{ item[0] }}</a></td>
-        <td>{{ item[1] }}</td>
-        <td>{{ item[2] }}</td>
-        <td>{{ item[3] }}</td>
-        <td>{{ item[4] }}</td>
-        <td>{{ item[5] }}</td>
-        <td>{{ item[6] }}</td>
-        <td>{{ item[7] }}</td>
-    </tr>
-    {% endfor %}
-</table>
-<footer>
-  <p>Total pages: {{ total_pages }}</p>
-</footer>
-<div class="pagination">
-  {% for page_num in range(1, total_pages+1) %}
-    <a href="{{ url_for('load_home', page_number=page_num) }}">{{ page_num }}</a>
-  {% endfor %}
-</div>
+
+    Showing items {{ first_item }} - {{ last_item }} of {{ total_items }}<br>
+    <form action="/search" method="get">
+        <input type="text" name="zipCode">
+        <button type="submit">Submit</button>
+    </form>
+    <table>
+        <tr>
+            <th>Amazon</th>
+            <th>URL</th>
+            <th>Location</th>
+            <th>Title</th>
+            <th>Time Remaining</th>
+            <th>Current Bid</th>
+            <th>Next Bid</th>
+            <th>MSRP</th>
+            <th>Bids Count</th>
+            <th>Condition</th>
+            <th>Picture</th> <!-- Added new table header -->
+        </tr>
+        {% for item in current_page %}
+
+        <tr>
+
+            <td><a href="#" onclick="openInNewWindow('{{ item[10] }}')">View on Amazon</a></td>
+            <td><a href="{{ item[0] }}">{{ item[0] }}</a></td>
+            <td>{{ item[1] }}</td>
+            <td>{{ item[2] }}</td>
+            <td>{{ item[3] }}</td>
+            <td>{{ item[4] }}</td>
+            <td>{{ item[5] }}</td>
+            <td>{{ item[6] }}</td>
+            <td>{{ item[7] }}</td>
+            <td>{{ item[8] }}</td>
+            <td>
+                {% if item[9] %}
+                    <img src="{{ item[9][0] }}" alt="Item Picture"> <!-- Displaying only the first picture -->
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <footer>
+        <p>Total pages: {{ total_pages }}</p>
+    </footer>
+    <div class="pagination">
+        {% for page_num in range(1, total_pages+1) %}
+        <a href="{{ url_for('load_home', page_number=page_num) }}">{{ page_num }}</a>
+        {% endfor %}
+    </div>
+<script>
+    function openInNewWindow(url) {
+        window.open(url, '_blank', 'toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=1000,height=1000');
+    }
+</script>
+
 </body>
