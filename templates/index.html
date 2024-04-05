@@ -1,62 +1,78 @@
+<html>
 <head>
     <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
+    <!-- Add a reference to the jQuery library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Add a reference to the Sticky Table Headers plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/StickyTableHeaders/0.1.19/js/jquery.stickytableheaders.min.js"></script>
 </head>
-
 <body>
-
-    Showing items {{ first_item }} - {{ last_item }} of {{ total_items }}<br>
-    <form action="/search" method="get">
-        <input type="text" name="zipCode">
-        <button type="submit">Submit</button>
-    </form>
-    <table>
-        <tr>
-            <th>Amazon</th>
-            <th>URL</th>
-            <th>Location</th>
-            <th>Title</th>
-            <th>Time Remaining</th>
-            <th>Current Bid</th>
-            <th>Next Bid</th>
-            <th>MSRP</th>
-            <th>Bids Count</th>
-            <th>Condition</th>
-            <th>Picture</th> <!-- Added new table header -->
-        </tr>
-        {% for item in current_page %}
-
-        <tr>
-
-            <td><a href="#" onclick="openInNewWindow('{{ item[10] }}')">View on Amazon</a></td>
-            <td><a href="{{ item[0] }}">{{ item[0] }}</a></td>
-            <td>{{ item[1] }}</td>
-            <td>{{ item[2] }}</td>
-            <td>{{ item[3] }}</td>
-            <td>{{ item[4] }}</td>
-            <td>{{ item[5] }}</td>
-            <td>{{ item[6] }}</td>
-            <td>{{ item[7] }}</td>
-            <td>{{ item[8] }}</td>
-            <td>
-                {% if item[9] %}
-                    <img src="{{ item[9][0] }}" alt="Item Picture"> <!-- Displaying only the first picture -->
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-    <footer>
-        <p>Total pages: {{ total_pages }}</p>
-    </footer>
-    <div class="pagination">
-        {% for page_num in range(1, total_pages+1) %}
-        <a href="{{ url_for('load_home', page_number=page_num) }}">{{ page_num }}</a>
-        {% endfor %}
+<div class="content_wrapper">
+    <div class="item_counter">Showing items {{ first_item }} - {{ last_item }} of {{ total_items }}</div>
+    <div class="search-form">
+        <form action="/search" method="get">
+            <input type="text" name="zipCode">
+            <button type="submit">Submit</button>
+        </form>
     </div>
+    <div class="table_wrapper">
+        <div class="table_container">
+            <table class="item_table">
+                <tr class="table_header">
+                    <th class="Amazon">Amazon</th>
+                    <th class="URL">URL</th>
+                    <th class="Location">Location</th>
+                    <th class="Title">Title</th>
+                    <th class="Time Remaining">Time Remaining</th>
+                    <th class="Current Bid">Current Bid</th>
+                    <th class="Next Bid">Next Bid</th>
+                    <th class="MSRP">MSRP</th>
+                    <th class="Bids Count">Bids Count</th>
+                    <th class="Condition">Condition</th>
+                    <th class="Picture">Picture</th>
+                </tr>
+                {% for item in current_page %}
+                    <tr class="table_row">
+                        <td><a href="#" onclick="openInNewWindow('{{ item[10] }}')">View on Amazon</a></td>
+                        <td><a href="{{ item[0] }}">{{ item[0] }}</a></td>
+                        <td>{{ item[1] }}</td>
+                        <td>{{ item[2] }}</td>
+                        <td>{{ item[3] }}</td>
+                        <td>{{ item[4] }}</td>
+                        <td>{{ item[5] }}</td>
+                        <td>{{ item[6] }}</td>
+                        <td>{{ item[7] }}</td>
+                        <td>{{ item[8] }}</td>
+                        <td class="img_cell">
+                            {% if item[9] %}
+                                <img src="{{ item[9][0] }}" alt="Item Picture">
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    <div class="footer_wrapper">
+        <footer>
+            <p>Total pages: {{ total_pages }}</p>
+        </footer>
+        <div class="pagination">
+            {% for page_num in range(1, total_pages+1) %}
+                <a href="{{ url_for('load_home', page_number=page_num) }}">{{ page_num }}</a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 <script>
+    // Add JavaScript code to initialize the StickyTableHeaders plugin
+    $(function(){
+        $(".item_table").stickyTableHeaders();
+    });
+
     function openInNewWindow(url) {
         window.open(url, '_blank', 'toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=1000,height=1000');
     }
 </script>
-
 </body>
+</html>

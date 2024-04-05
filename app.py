@@ -21,7 +21,6 @@ templates = Jinja2Templates(directory="templates")
 async def async_search(session, url):
     async with session.get(url) as response:
         if response.status != 200:
-            logging.debug(f'Response status code is not 200 for url {url}')
             return None
         return await response.text()
 
@@ -32,7 +31,6 @@ async def fetch_items(session, auction):
     auction_url = auction_link['href']
     auction_number = re.findall(r'\d+', auction_url)[0]
     url = f"https://auction.bidfta.io/api/item/getItemsByAuctionId/{auction_number}?&pageId=1&auctionId={auction_number}"
-    logging.debug(f'Adding task for url {url}')
     return await async_search(session, url), auction_location, auction_number
 
 @app.get("/")
@@ -46,10 +44,10 @@ async def search_redirect():
 @app.get("/search/{page_number}", response_class=HTMLResponse)
 async def load_home(request: Request, page_number: int = 1, zip: int = 45036):
     zip = request.query_params.get('zipCode', default="45036")
+    print(zip)
     container_class = "w-full mx-auto"
     soup = bs4.BeautifulSoup(await async_search(ClientSession(), f'https://www.bidfta.com/location-zip?miles=25&zipCode={zip}'), 'html.parser')
     auctions = soup.find_all('div', class_=container_class)
-    logging.debug(f'Total number of auctions: {len(auctions)}')
 
     async with ClientSession() as session:
         tasks = [fetch_items(session, auction) for auction in auctions]
@@ -61,7 +59,6 @@ async def load_home(request: Request, page_number: int = 1, zip: int = 45036):
             continue
         active_items = {}
         items_dict = json.loads(items_json)
-        print(items_dict[0])
         for item in items_dict:
             time_remaining = item['itemTimeRemaining']
             if int(time_remaining) > 0:
@@ -82,7 +79,6 @@ async def load_home(request: Request, page_number: int = 1, zip: int = 45036):
                 # Construct Amazon search URL with the item's name
                 search_query = "+".join(item['title'].split())  # Replace spaces with "+"
                 amazon_search_url = f"https://www.amazon.com/s?k={search_query}"
-                print(amazon_search_url)
                 # Add Amazon search URL to active_items
                 active_items[id_key]['amazon_search_link'] = amazon_search_url
                 all_items_time_remaining.append((
