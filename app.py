@@ -5,6 +5,8 @@ import re
 import time
 from concurrent.futures import ThreadPoolExecutor
 from math import ceil
+
+import aiohttp
 import bs4
 from aiohttp import ClientSession
 from bs4 import BeautifulSoup
@@ -43,13 +45,14 @@ async def search_redirect():
 
 @app.get("/search/{page_number}", response_class=HTMLResponse)
 async def load_home(request: Request, page_number: int = 1, zip: int = 45036):
-    zip = request.query_params.get('zipCode', default="45036")
-    print(zip)
-    container_class = "w-full mx-auto"
-    soup = bs4.BeautifulSoup(await async_search(ClientSession(), f'https://www.bidfta.com/location-zip?miles=25&zipCode={zip}'), 'html.parser')
-    auctions = soup.find_all('div', class_=container_class)
+    async with aiohttp.ClientSession() as session:
+        zip = request.query_params.get('zipCode', default="45036")
+        print(zip)
+        container_class = "w-full mx-auto"
+        soup = bs4.BeautifulSoup(
+            await async_search(session, f'https://www.bidfta.com/location-zip?miles=25&zipCode={zip}'), 'html.parser')
+        auctions = soup.find_all('div', class_=container_class)
 
-    async with ClientSession() as session:
         tasks = [fetch_items(session, auction) for auction in auctions]
         responses = await asyncio.gather(*tasks)
 
