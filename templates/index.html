@@ -2,9 +2,13 @@
 <head>
     <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
     <!-- Add a reference to the jQuery library -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- Add a reference to the Sticky Table Headers plugin -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/StickyTableHeaders/0.1.19/js/jquery.stickytableheaders.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-table-headers/0.1.24/js/jquery.stickytableheaders.min.js
+
+
+
+"></script>
 </head>
 <body>
 <div class="content_wrapper">
@@ -65,14 +69,16 @@
     </div>
 </div>
 <script>
-    // Add JavaScript code to initialize the StickyTableHeaders plugin
-    $(function(){
-        $(".item_table").stickyTableHeaders();
-    });
+
 
     function openInNewWindow(url) {
         window.open(url, '_blank', 'toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=1000,height=1000');
     }
+</script>
+<script>
+    $(document).ready(function(){
+        $(".item_table").stickyTableHeaders();
+    });
 </script>
 </body>
 </html>
