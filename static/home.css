@@ -1,0 +1,39 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #F0F0F0;
+}
+
+h1 {
+    background-color: #1E90FF;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+p {
+    text-align: justify;
+    padding: 0 10px;
+}
+
+form {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+#zipCode {
+    padding: 5px;
+    font-size: 18px;
+}
+
+button {
+    color: white;
+    background-color: #1E90FF;
+    border: none;
+    padding: 10px 20px;
+    font-size: 18px;
+    margin-top: 20px;
+    cursor: pointer;
+}
