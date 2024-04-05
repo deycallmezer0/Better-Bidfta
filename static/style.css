@@ -20,7 +20,7 @@ body {
 
 .table_wrapper {
     width: 100%;
-    overflow-x: auto;  /* Enable horizontal scrolling if the table is wider than the container */
+    /* overflow-x: auto;   Enable horizontal scrolling if the table is wider than the container */
 }
 
 .table_container {
