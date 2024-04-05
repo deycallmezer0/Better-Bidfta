@@ -3,18 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-<h1>
-    Welcome to Better Bidfta
-</h1>
-<h2>
-    Please start by entering in the zip code below
-</h2>
+<h1>Welcome to Better FTA</h1>
+<p>Please start by entering in the zip code below</p>
 <form action="/search" method="get">
-    <input type="text" name="zipCode">
+    <label for="zipCode">Zip Code:</label>
+    <input type="text" id="zipCode" name="zipCode">
     <button type="submit">Submit</button>
 </form>
-
 </body>
 </html>
