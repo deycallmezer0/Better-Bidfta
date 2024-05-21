@@ -40,14 +40,15 @@ async def main_page(request: Request):
     return templates.TemplateResponse("home.html", {"request": request})
 
 @app.get("/search")
-async def search_redirect():
-    return RedirectResponse(url=app.url_path_for("load_home", page_number=1))
+async def search_redirect(zip: str, page_number: int = 1):
+    print(zip)
+    return RedirectResponse(url=app.url_path_for("load_home", page_number=page_number) + f"?zip={zip}")
 
-@app.get("/search/{page_number}", response_class=HTMLResponse)
-async def load_home(request: Request, page_number: int = 1, zip: int = 45036):
+@app.get("/home/{page_number}", name="load_home", response_class=HTMLResponse)
+async def load_home(request: Request, page_number: int, zip: str):
+    print(zip)
     async with aiohttp.ClientSession() as session:
-        zip = request.query_params.get('zipCode', default="45036")
-        print(zip)
+        print(f"Received zip code: {zip}")
         container_class = "w-full mx-auto"
         soup = bs4.BeautifulSoup(
             await async_search(session, f'https://www.bidfta.com/location-zip?miles=25&zipCode={zip}'), 'html.parser')
@@ -115,7 +116,8 @@ async def load_home(request: Request, page_number: int = 1, zip: int = 45036):
         "page_number": page_number,
         "first_item": first_item,
         "last_item": last_item,
-        "total_items": total_items
+        "total_items": total_items,
+        "zip": zip
     }
     return templates.TemplateResponse('index.html', context)
 
