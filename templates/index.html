@@ -15,7 +15,7 @@
     <div class="item_counter">Showing items {{ first_item }} - {{ last_item }} of {{ total_items }}</div>
     <div class="search-form">
         <form action="/search" method="get">
-            <input type="text" name="zipCode">
+            <input type="text" name="zip">
             <button type="submit">Submit</button>
         </form>
     </div>
@@ -63,7 +63,7 @@
         </footer>
         <div class="pagination">
             {% for page_num in range(1, total_pages+1) %}
-                <a href="{{ url_for('load_home', page_number=page_num, zip=zip) }}">{{ page_num }}</a>
+                <a href="{{ url_for('load_home', page_number=page_num) }}?zip={{ zip }}">{{ page_num }}</a>
             {% endfor %}
         </div>
     </div>
