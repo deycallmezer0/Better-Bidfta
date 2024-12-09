@@ -10,9 +10,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./frontend
 
     steps:
     - uses: actions/checkout@v2
@@ -33,13 +30,14 @@ jobs:
         password: ${{ secrets.ACR_PASSWORD }}
 
     - name: Build and push Docker image
-      uses: docker/build-push-action@v2
+      uses: docker/build-push-action@v3
       with:
         context: ./frontend
+        file: ./frontend/Dockerfile
         push: true
         tags: betterftaacr.azurecr.io/frontend:latest
-        cache-from: type=registry,ref=betterftaacr.azurecr.io/frontend:buildcache
-        cache-to: type=registry,ref=betterftaacr.azurecr.io/frontend:buildcache,mode=max
+        build-args: |
+          REACT_APP_API_URL=https://better-fta-backend.azurewebsites.net
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
