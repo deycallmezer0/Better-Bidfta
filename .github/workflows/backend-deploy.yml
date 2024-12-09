@@ -1,3 +1,4 @@
+# backend-deploy.yml
 name: Deploy Backend
 
 on:
@@ -12,12 +13,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
         python-version: '3.9'
+        cache: 'pip'
+        cache-dependency-path: './backend/requirements.txt'
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
@@ -35,11 +40,15 @@ jobs:
         context: ./backend
         file: ./backend/Dockerfile
         push: true
-        tags: betterftaacr.azurecr.io/backend:latest
+        tags: |
+          betterftaacr.azurecr.io/backend:latest
+          betterftaacr.azurecr.io/backend:${{ github.sha }}
+        cache-from: type=registry,ref=betterftaacr.azurecr.io/backend:buildcache
+        cache-to: type=registry,ref=betterftaacr.azurecr.io/backend:buildcache,mode=max
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
         app-name: 'better-fta-backend'
         publish-profile: ${{ secrets.BACKEND_PUBLISH_PROFILE }}
-        images: 'betterftaacr.azurecr.io/backend:latest'
+        images: 'betterftaacr.azurecr.io/backend:${{ github.sha }}'
