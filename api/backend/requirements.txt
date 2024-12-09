@@ -1,6 +1,6 @@
 fastapi==0.68.1
 uvicorn==0.15.0
-aiohttp==3.8.1
+aiohttp==3.8.1 --no-build-isolation
 beautifulsoup4==4.9.3
 jinja2==3.0.1
 python-multipart==0.0.5
