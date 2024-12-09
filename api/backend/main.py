@@ -61,8 +61,8 @@ async def fetch_items(session, auction):
     return await async_search(session, url), auction_location, auction_number
 
 @app.get("/home/{page_number}")
-async def load_home(request: Request, page_number: int, zip: str):
-    logger.info(f"Processing API request for zip: {zip}, page: {page_number}")
+async def load_home(request: Request, page_number: int, zip: str, skip_pagination: bool = False):
+    logger.info(f"Processing API request for zip: {zip}, page: {page_number}, skip_pagination: {skip_pagination}")
     try:
         async with aiohttp.ClientSession() as session:
             container_class = "w-full mx-auto"
@@ -80,10 +80,12 @@ async def load_home(request: Request, page_number: int, zip: str):
                 continue
             try:
                 items_dict = json.loads(items_json)
+                # print first items dict to see what it looks like
+                print(items_dict[0])
                 for item in items_dict:
+                    
                     time_remaining = item['itemTimeRemaining']
                     if int(time_remaining) > 0:
-                        # Create amazon search URL with proper encoding
                         amazon_search_url = f"https://www.amazon.com/s?k={quote_plus(item['title'])}"
                         
                         processed_items.append({
@@ -97,29 +99,44 @@ async def load_home(request: Request, page_number: int, zip: str):
                             'bids_count': item['bidsCount'],
                             'condition': item['condition'],
                             'pictures': item['pictures'],
-                            'amazon_search_url': amazon_search_url
+                            'amazon_search_url': amazon_search_url,
+                            'category1': item['category1'],
+                            'category2': item['category2'],
                         })
             except json.JSONDecodeError as e:
                 print(f"Error decoding JSON: {e}")
             except Exception as e:
                 print(f"Unexpected error processing items: {e}")
 
-        # Pagination
-        items_per_page = 50
-        total_items = len(processed_items)
-        start_idx = (page_number - 1) * items_per_page
-        end_idx = min(page_number * items_per_page, total_items)
+        # Always return all items when skip_pagination is True
+        if skip_pagination == True:
+            logger.info(f"Skipping pagination, returning all {len(processed_items)} items")
+            response_data = {
+                "items": processed_items,
+                "total_items": len(processed_items),
+                "total_pages": 1,
+                "page_number": 1,
+                "first_item": 1,
+                "last_item": len(processed_items)
+            }
+        else:
+            # Pagination for normal requests
+            items_per_page = 50
+            total_items = len(processed_items)
+            start_idx = (page_number - 1) * items_per_page
+            end_idx = min(page_number * items_per_page, total_items)
+            
+            logger.info(f"Paginating {total_items} items, returning items {start_idx + 1} to {end_idx}")
+            response_data = {
+                "items": processed_items[start_idx:end_idx],
+                "total_pages": ceil(total_items / items_per_page),
+                "page_number": page_number,
+                "total_items": total_items,
+                "first_item": start_idx + 1,
+                "last_item": end_idx
+            }
         
-        response_data = {
-            "items": processed_items[start_idx:end_idx],
-            "total_pages": ceil(total_items / items_per_page),
-            "page_number": page_number,
-            "total_items": total_items,
-            "first_item": start_idx + 1,
-            "last_item": end_idx
-        }
-        
-        logger.info(f"Returning {len(response_data['items'])} items for page {page_number}")
+        logger.info(f"Returning {len(response_data['items'])} items")
         return JSONResponse(content=response_data)
         
     except Exception as e:

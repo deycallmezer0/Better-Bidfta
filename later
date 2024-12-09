@@ -1,2 +1,0 @@
-get item info (used in site to refresh) - https://auction.bidfta.io/api/item/getUpdateItemsInfo?itemIds={itemIDs}
-
