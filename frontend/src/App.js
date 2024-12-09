@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import {
   Search,
   Clock,
@@ -24,7 +24,7 @@ const App = () => {
   const [selectedLocations, setSelectedLocations] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
   const [allLocations, setAllLocations] = useState([]);
-  const [allCategories, setAllCategories] = useState([]);
+  const [, setAllCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
 
   // Filter items based on selected locations
